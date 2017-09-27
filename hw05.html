@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    
+<script>
+// JavaScript Function for calling a server
+    
+function validatePhone(phone) {
+	// set up URL
+	url = 'http://lyle.smu.edu/~seungkil/3342/hw5/isValidPhone.py';
+	// let you know that phone number is coming in ok - remove when working
+	alert("ready to check the number in Python: " + phone);
+
+	// AJAX CALL
+
+     $.ajax({
+        type: 'GET',
+        url: url,
+        dataType: "json",
+        async: false,
+        data: {phone : phone},
+        success: function(msg) {
+	    // msg will be a JS (JSON) Object with fields
+            console.log("return value = " + msg.isValidPhone);
+	      if(msg.isValidPhone == true){
+              alert(msg.isValidPhone);
+		      valNum = true;              
+          }
+           else{
+                alert("Not a valid Phone Number");
+                valNum = false;     
+           }
+
+        },
+        error: function(jqXHR, exception) {
+            if (jqXHR.status === 0) {
+                alert('Unable to connect.\n Verify Network.');
+            } else if (jqXHR.status == 404) {
+                alert('Requested URL  not found. [404]');
+            } else if (jqXHR.status == 500) {
+                alert('Internal Server Error [500].');
+            } else if (exception === 'parsererror') {
+                alert('Data from Server was not JSON :( Parse failed.');
+            } else if (exception === 'timeout') {
+                alert('Time out error.');
+            } else if (exception === 'abort') {
+                alert('Ajax request aborted.');
+            } else {
+                alert('Uncaught Error.\n' + jqXHR.responseText);
+            }
+        }
+        
+    });
+
+}    
+    
+// code to execute after button press
+function showPhoneOnPage() {
+ // pull value out of TEXT field
+    var s1 = document.getElementById('phone1').value;
+    validatePhone(s1);
+    OnClientClick="AJAXMethod(); return false;"
+
+    if(valNum == true){
+        var areaCode = s1.substring(0,3);
+        var area;
+     // use this value to update web page
+
+        if (areaCode == '202') {
+            area = 'Welcome From: Washington, DC'
+        }
+        else if (areaCode == '205') {
+            area = 'Welcome From: Birmingham, AL'
+        }
+        else if (areaCode == '206') {
+            area = 'Welcome From: Seatle, WA'
+        }
+        else if (areaCode == '210') {
+            area = 'Welcome From: San Antonio, TX'
+        }
+        else if (areaCode == '212') {
+            area = 'Welcome From: New York, NY'
+        }
+        else if (areaCode == '213') {
+            area = 'Welcome From: Los Angeles, CA'
+        }    
+        else if (areaCode == '214') {
+            area = 'Welcome From: Dallas, TX'
+        }    
+        else if (areaCode == '215') {
+            area = 'Welcome From: Philadelphia, PA'
+        }
+        else if (areaCode == '216') {
+            area = 'Welcome From: Cleveland, OH'
+        }
+        else if (areaCode == '217') {
+            area = 'Welcome From: Chicago, IL'
+        }
+        else{
+            area = 'We Dunno Where You From Boooooooy!'
+        }
+        document.getElementById('foobar').innerHTML = area;    
+        }
+}    
+</script>
+</head>
+<body>
+
+<h2>Seung Ki's Phone Number Validation</h2>
+Enter Phone Number: <input name="phoneNumber" type="text" maxlength="12" id="phone1" />
+<br/><br/>
+
+<button onclick="showPhoneOnPage()">Button For Python</button>
+<br/><br/>
+
+<h3 id="foobar">WHo AM I?</h3>
+
+</body>
+</html>
